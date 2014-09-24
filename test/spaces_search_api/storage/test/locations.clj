@@ -7,23 +7,6 @@
             [clojurewerkz.elastisch.native.index :as esi]
             [clojurewerkz.elastisch.native.document :as esd]))  
 
-(deftest index-and-get-location
-  (let [system (component/start (spaces-test-db))
-        {:keys [es]} system
-        {:keys [conn index m-type]} es]
-    (try
-      (testing "Index and get location"
-        (let [location {:id (str (uuid))
-                        :geocodes {:lat 13.734603 :lon 100.5639662}}
-              index-res (storage/index-location conn index m-type location)]
-          (esi/refresh conn index)
-          (is (= (:id location) (:id index-res)))
-          (let [indexed-location (esd/get conn index m-type (:id location))]
-            (is (= (:id location) (-> indexed-location :source :id)))
-            (is (= (:geocodes location) (-> indexed-location :source :geocodes))))))
-      (finally
-        (component/stop system)))))
-
 (deftest index-and-query-location-with-distance-filter
   (let [system (component/start (spaces-test-db))
         {:keys [es]} system
@@ -109,4 +92,54 @@
       (finally
         (component/stop system)))))
 
+(deftest index-and-get-location
+  (let [system (component/start (spaces-test-db))
+        {:keys [es]} system
+        {:keys [conn index m-type]} es]
+    (try
+      (testing "Index and get location"
+        (let [location {:id (str (uuid))
+                        :geocodes {:lat 13.734603 :lon 100.5639662}}
+              index-res (storage/index-location conn index m-type location)]
+          (esi/refresh conn index)
+          (is (= (:id location) (:id index-res)))
+          (let [indexed-location (esd/get conn index m-type (:id location))]
+            (is (= (:id location) (-> indexed-location :source :id)))
+            (is (= (:geocodes location) (-> indexed-location :source :geocodes))))))
+      (finally
+        (component/stop system)))))
 
+(deftest index-and-update-location
+  (let [system (component/start (spaces-test-db))
+        {:keys [es]} system
+        {:keys [conn index m-type]} es]
+    (try
+      (testing "Index and update location"
+        (let [location {:id (str (uuid))
+                        :geocodes {:lat 13.734603 :lon 100.5639662}}
+              index-res (storage/index-location conn index m-type location)]
+          (esi/refresh conn index)
+          (is (= (:id location) (:id index-res)))
+          (let [update-location (partial storage/update-location conn index m-type)]
+            (update-location {:geocodes {:lat 13.896532 :lon 100.77885544}} (:id location))
+            (let [updated-location (esd/get conn index m-type (:id location))]
+              (is (= 13.896532 (-> updated-location :source :geocodes :lat)))
+              (is (= 100.77885544 (-> updated-location :source :geocodes :lon)))))))
+        (finally
+          (component/stop system)))))
+
+(deftest index-and-delete-location
+  (let [system (component/start (spaces-test-db))
+        {:keys [es]} system
+        {:keys [conn index m-type]} es]
+    (try
+      (testing "Index and delete location"
+        (let [location {:id (str (uuid))
+                        :geocodes {:lat 13.734603 :lon 100.5639662}}
+              index-res (storage/index-location conn index m-type location)]
+          (esi/refresh conn index)
+          (is (= (:id location) (:id index-res)))
+          (storage/delete-location conn index m-type (:id location))
+          (is (= nil (-> (esd/get conn index m-type (:id location)))))))
+      (finally
+        (component/stop system)))))
