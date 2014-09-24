@@ -2,30 +2,30 @@
   (:require [compojure.core :refer :all]
             [compojure.route :as route]
             [taoensso.timbre :as timbre]
-            [spaces-search-api.service.ads :as service]   
+            [spaces-search-api.service.locations :as service]   
             [com.stuartsierra.component :as component]))
 
 (timbre/refer-timbre)
 
-(defn- query-ads [db query]
-  (let [{:keys [conn index]} db] 
-    (if-let [ads (service/query-ads conn index query)]
-      {:status 200 :body ads}
+(defn- query-location [db query]
+  (let [{:keys [conn index m-type]} db] 
+    (if-let [locations (service/query-location conn index m-type query)]
+      {:status 200 :body locations}
       {:status 404})))
 
-(defn- index-ad [db req]
-  (let [{:keys [conn index]} db] 
+(defn- index-location [db req]
+  (let [{:keys [conn index m-type]} db] 
     {:status 201
-     :body (service/index-ad conn index (:params req))}))
+     :body (service/index-location conn index m-type (:params req))}))
 
-(defn- update-ad [db req ad-id]
-  (let [{:keys [conn index]} db] 
+(defn- update-location [db req location-id]
+  (let [{:keys [conn index m-type]} db] 
     {:status 201
-     :body (service/update-ad conn index (:params req) ad-id)}))
+     :body (service/update-location conn index m-type (:params req) location-id)}))
 
-(defn- delete-ad [db ad-id]
-  (let [{:keys [conn index]} db] 
-    (if (service/delete-ad conn index ad-id)
+(defn- delete-location [db location-id]
+  (let [{:keys [conn index m-type]} db] 
+    (if (service/delete-location conn index m-type location-id)
       {:status 204}
       {:status 404})))
 
@@ -37,10 +37,10 @@
     (if (:routes this)
       this 
       (let [api-routes (routes
-                         (GET "/ads/:query" [query :as req] (query-ads es query))
-                         (POST "/ads" req (index-ad es req))
-                         (PUT "/ads/:ad-id" [ad-id :as req] (update-ad es req ad-id))
-                         (DELETE "/ads/:ad-id" [ad-id :as req] (delete-ad ad-id))
+                         (GET "/location/:query" [query :as req] (query-location es query))
+                         (POST "/location" req (index-location es req))
+                         (PUT "/location/:loc-id" [loc-id :as req] (update-location es req loc-id))
+                         (DELETE "/location/:loc-id" [loc-id :as req] (delete-location loc-id))
                          (route/resources "/")
                          (route/not-found "Not Found"))]
         (assoc this :routes api-routes))))
