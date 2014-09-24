@@ -1,6 +1,7 @@
 (ns spaces-search-api.storage.locations
   (:require [taoensso.timbre :as timbre]
             [clojurewerkz.elastisch.query :as q]
+            [clojurewerkz.elastisch.native.index :as esi]
             [clojurewerkz.elastisch.native.response :as esr]
             [clojurewerkz.elastisch.native.document :as esd]))
 
@@ -59,3 +60,5 @@
 (defn delete-location [conn index m-type location-id]
   (esd/delete conn index m-type location-id)) 
 
+(defn refresh-index [conn index]
+  (esi/refresh conn index))

@@ -15,7 +15,7 @@
 
 (defn spaces-test-system []
   (component/system-map
-    :es (db/es)
+    :es (db/es-test)
     :api-routes (routes/api-routes)
     :ring-handler (handler/ring-handler)
     :web-server (server/web-server-test)))

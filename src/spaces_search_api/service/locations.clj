@@ -5,7 +5,7 @@
 (timbre/refer-timbre)
 
 (defn query-location [conn index m-type query]
-  (storage/query-location (:filter query) conn index m-type query))
+  (storage/query-location (-> query :filter keyword) conn index m-type query))
 
 (defn index-location [conn index m-type params]
   (storage/index-location conn index m-type params))
@@ -15,3 +15,6 @@
 
 (defn delete-location [conn index m-type location-id]
   (storage/delete-location conn index m-type location-id))
+
+(defn refresh-location [conn index]
+  (storage/refresh-index conn index))

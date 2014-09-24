@@ -7,9 +7,9 @@
 
 (timbre/refer-timbre)
 
-(defn- query-location [db query]
+(defn- query-location [db req]
   (let [{:keys [conn index m-type]} db] 
-    (if-let [locations (service/query-location conn index m-type query)]
+    (if-let [locations (service/query-location conn index m-type (:params req))]
       {:status 200 :body locations}
       {:status 404})))
 
@@ -29,6 +29,11 @@
       {:status 204}
       {:status 404})))
 
+(defn- refresh [db]
+  (let [{:keys [conn index]} db] 
+    (service/refresh-location conn index)
+    {:status 200}))
+
 (defrecord ApiRoutes [es]
   component/Lifecycle
 
@@ -37,10 +42,11 @@
     (if (:routes this)
       this 
       (let [api-routes (routes
-                         (GET "/location/:query" [query :as req] (query-location es query))
-                         (POST "/location" req (index-location es req))
-                         (PUT "/location/:loc-id" [loc-id :as req] (update-location es req loc-id))
-                         (DELETE "/location/:loc-id" [loc-id :as req] (delete-location loc-id))
+                         (GET "/api/locations/refresh" req (refresh es))
+                         (POST "/api/locations/query" req (query-location es req))
+                         (POST "/api/locations" req (index-location es req))
+                         (PUT "/api/locations/:loc-id" [loc-id :as req] (update-location es req loc-id))
+                         (DELETE "/api/locations/:loc-id" [loc-id :as req] (delete-location loc-id))
                          (route/resources "/")
                          (route/not-found "Not Found"))]
         (assoc this :routes api-routes))))
