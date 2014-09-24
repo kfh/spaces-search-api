@@ -139,7 +139,7 @@
               index-res (storage/index-location conn index m-type location)]
           (esi/refresh conn index)
           (is (= (:id location) (:id index-res)))
-          (storage/delete-location conn index m-type (:id location))
+          (is (= true (-> (storage/delete-location conn index m-type (:id location)) :found?)))
           (is (= nil (-> (esd/get conn index m-type (:id location)))))))
       (finally
         (component/stop system)))))
