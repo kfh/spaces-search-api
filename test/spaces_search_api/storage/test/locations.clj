@@ -1,4 +1,4 @@
-(ns spaces-search-api.storage.test.ads
+(ns spaces-search-api.storage.test.locations
   (:require [hara.common :refer [uuid]] 
             [spaces-search-api.storage.locations :as storage]  
             [spaces-search-api.system :refer [spaces-test-db]]  
