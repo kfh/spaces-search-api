@@ -48,7 +48,6 @@
       (finally
         (component/stop system)))))
 
-
 (deftest index-and-query-location-with-polygon-filter
   (let [system (component/start (spaces-test-system))
         {:keys [web-server]} system]
