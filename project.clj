@@ -5,6 +5,7 @@
                  [cheshire "5.3.1"]
                  [clj-http "1.0.0"]
                  [compojure "1.1.9"]
+                 [liberator "0.12.2"]
                  [im.chit/hara "2.1.3"] 
                  [ring/ring-json "0.3.1"] 
                  [org.clojure/clojure "1.6.0"]

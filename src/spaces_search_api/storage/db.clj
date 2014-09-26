@@ -2,6 +2,7 @@
   (:require [hara.common :refer [uuid]]
             [cheshire.core :as json]
             [clj-http.client :as http] 
+            [clj-http.conn-mgr :as mgr] 
             [taoensso.timbre :as timbre]
             [clojurewerkz.elastisch.native :as es] 
             [clojurewerkz.elastisch.native.index :as esi]

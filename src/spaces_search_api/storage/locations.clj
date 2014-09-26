@@ -60,5 +60,8 @@
 (defn delete-location [conn index m-type location-id]
   (esd/delete conn index m-type location-id)) 
 
+(defn get-location [conn index m-type location-id]
+  (esd/get conn index m-type location-id))
+
 (defn refresh-index [conn index]
   (esi/refresh conn index))

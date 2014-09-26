@@ -16,5 +16,8 @@
 (defn delete-location [conn index m-type location-id]
   (storage/delete-location conn index m-type location-id))
 
+(defn get-location [conn index m-type location-id]
+  (storage/get-location conn index m-type location-id))
+
 (defn refresh-location [conn index]
   (storage/refresh-index conn index))
