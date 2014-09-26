@@ -11,7 +11,7 @@
 
 (defn- query-location [db ctx]
   (let [{:keys [conn index m-type]} db
-        body (-> (slurp (-> ctx :request :body)))
+        body (-> ctx :request :body slurp)
         body->edn (json/parse-string body true)]
     (service/query-location conn index m-type body->edn)))
 
