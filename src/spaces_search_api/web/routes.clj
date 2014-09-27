@@ -19,9 +19,9 @@
   (let [{:keys [conn index m-type]} db] 
     (service/index-location conn index m-type (:params ctx))))
 
-(defn- update-location [db ctx location-id]
+(defn- update-location [db location-id req]
   (let [{:keys [conn index m-type]} db] 
-    (service/update-location conn index m-type (:params ctx) location-id)))
+    (service/update-location conn index m-type location-id (:params req))))
 
 (defn- delete-location [db location-id]
   (let [{:keys [conn index m-type]} db]
@@ -61,15 +61,16 @@
                             :available-media-types ["application/json"]  
                             :post! (fn [ctx] {::res (index-location es (:request ctx))})
                             :handle-created ::res))
-                     (ANY "/locations/:loc-id" [loc-id] 
+                     (ANY "/locations/:id" [id] 
                           (resource 
                             :allowed-methods [:get :put :delete]
                             :available-media-types ["application/json"] 
-                            :exists? (fn [_] (when-let [loc (get-location es loc-id)] {::res loc}))
+                            :exists? (fn [_] (when-let [loc (get-location es id)] {::res loc}))
                             :handle-ok ::res   
-                            :put! (fn [ctx] {::res (update-location es (:request ctx) loc-id)})   
+                            :put! (fn [ctx] {::res (update-location es id (:request ctx))})   
                             :handle-created ::res
-                            :delete! (fn [_] (delete-location es loc-id)))))]
+                            :delete! (fn [_] (delete-location es id))
+                            :handle-exception (fn [ctx] {::error (.getMessage (:exception ctx))}))))]
         (assoc this :routes api-routes))))
 
   (stop [this]

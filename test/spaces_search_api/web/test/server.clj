@@ -11,7 +11,7 @@
         {:keys [web-server]} system]
     (try 
       (testing "Index and query for location using distance filter"
-        (let [loc {:id (str (uuid)) :geocodes {:lat 13.734603 :lon 100.5639662} :filter :distance-filter}
+        (let [loc {:id (str (uuid)) :geocodes {:lat 13.734603 :lon 100.5639662}}
               url (str "http://" (:host web-server) ":" (:port web-server))
               post (partial http/post (str url "/api/locations"))
               res (post {:form-params loc :content-type :json})]
@@ -32,7 +32,7 @@
         {:keys [web-server]} system]
     (try 
       (testing "Index and query for location using distance range filter"
-        (let [loc {:id (str (uuid)) :geocodes {:lat 13.734603 :lon 100.5639662} :filter :distance-range-filter}
+        (let [loc {:id (str (uuid)) :geocodes {:lat 13.734603 :lon 100.5639662}}
               url (str "http://" (:host web-server) ":" (:port web-server))
               post (partial http/post (str url "/api/locations"))
               res (post {:form-params loc :content-type :json})]
@@ -53,7 +53,7 @@
         {:keys [web-server]} system]
     (try 
       (testing "Index and query for location using polygon filter"
-        (let [loc {:id (str (uuid)) :geocodes {:lat 13.734603 :lon 100.5639662} :filter :polygon-filter}
+        (let [loc {:id (str (uuid)) :geocodes {:lat 13.734603 :lon 100.5639662}}
               url (str "http://" (:host web-server) ":" (:port web-server))
               post (partial http/post (str url "/api/locations"))
               res (post {:form-params loc :content-type :json})]
@@ -74,7 +74,7 @@
         {:keys [web-server]} system]
     (try 
       (testing "Index and query for location using bounding box filter"
-        (let [loc {:id (str (uuid)) :geocodes {:lat 13.734603 :lon 100.5639662} :filter :bounding-box-filter}
+        (let [loc {:id (str (uuid)) :geocodes {:lat 13.734603 :lon 100.5639662}}
               url (str "http://" (:host web-server) ":" (:port web-server))
               post (partial http/post (str url "/api/locations"))
               res (post {:form-params loc :content-type :json})]
@@ -96,14 +96,14 @@
         {:keys [web-server]} system]
     (try 
       (testing "Index and update location"
-        (let [loc {:id (str (uuid)) :geocodes {:lat 13.734603 :lon 100.5639662} :filter :bounding-box-filter}
+        (let [loc {:id (str (uuid)) :geocodes {:lat 13.734603 :lon 100.5639662}}
               url (str "http://" (:host web-server) ":" (:port web-server))
               post (partial http/post (str url "/api/locations"))
               res (post {:form-params loc :content-type :json})]
           (http/get (str url "/api/locations/refresh"))
           (is (= (:id loc) (:id (-> res :body (json/parse-string true)))))
           (let [update-location (partial http/put (str url "/api/locations/" (:id loc)))]
-            (update-location {:form-params {:geocodes {:lat 13.896532 :lon 100.77885544}} :content-type :json})
+            (update-location {:form-params {:id (:id loc) :geocodes {:lat 13.896532 :lon 100.77885544}} :content-type :json})
             (let [updated-location (http/get (str url "/api/locations/" (:id loc)))]
               (is (= 13.896532  (-> updated-location :body (json/parse-string true) :source :geocodes :lat)))
               (is (= 100.77885544 (-> updated-location :body (json/parse-string true) :source :geocodes :lon)))))))   
@@ -115,7 +115,7 @@
         {:keys [web-server]} system]
     (try 
       (testing "Index and delete location"
-        (let [loc {:id (str (uuid)) :geocodes {:lat 13.734603 :lon 100.5639662} :filter :bounding-box-filter}
+        (let [loc {:id (str (uuid)) :geocodes {:lat 13.734603 :lon 100.5639662}}
               url (str "http://" (:host web-server) ":" (:port web-server))
               post (partial http/post (str url "/api/locations"))
               res (post {:form-params loc :content-type :json})]
