@@ -53,7 +53,8 @@
                           (resource 
                             :allowed-methods [:get]
                             :available-media-types ["application/json"] 
-                            :handle-ok (fn [ctx] (query-location es ctx))))
+                            :handle-ok (fn [ctx] (query-location es ctx))
+                            :handle-exception (fn [ctx] {::error (.getMessage (:exception ctx))})))
                      (ANY "/locations" []
                           (resource 
                             :allowed-methods [:post]

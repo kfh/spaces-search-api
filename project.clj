@@ -8,6 +8,7 @@
                  [liberator "0.12.2"]
                  [im.chit/hara "2.1.3"] 
                  [ring/ring-json "0.3.1"] 
+                 [prismatic/schema "0.3.0"]
                  [org.clojure/clojure "1.6.0"]
                  [com.taoensso/timbre "3.3.1"]
                  [org.clojure/clojure "1.6.0"]
@@ -18,6 +19,6 @@
                    :dependencies [[org.clojure/tools.namespace "0.2.6"]
                                   [org.clojure/java.classpath "0.2.2"]
                                   [javax.servlet/servlet-api "2.5"]
-                                  [ring-mock "0.1.5"]]}}
-  :main spaces-search-api.system
-  :aot [spaces-search-api.system])
+                                  [ring-mock "0.1.5"]]}
+             :uberjar {:main spaces-search-api.system
+                       :aot [spaces-search-api.system]}})

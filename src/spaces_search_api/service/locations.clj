@@ -1,11 +1,16 @@
 (ns spaces-search-api.service.locations
   (:require [taoensso.timbre :as timbre]
+            [spaces-search-api.domain.locations :as domain]  
             [spaces-search-api.storage.locations :as storage]))
 
 (timbre/refer-timbre)
 
 (defn query-location [conn index m-type query]
-  (storage/query-location (-> query :filter keyword) conn index m-type query))
+  (-> query
+      (domain/coerce-location-query)
+      (domain/validate-location-query)  
+      (as-> val-query
+        (storage/query-location (:filter val-query) conn index m-type val-query))))
 
 (defn index-location [conn index m-type params]
   (storage/index-location conn index m-type params))
