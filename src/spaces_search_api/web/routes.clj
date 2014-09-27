@@ -60,7 +60,8 @@
                             :allowed-methods [:post]
                             :available-media-types ["application/json"]  
                             :post! (fn [ctx] {::res (index-location es (:request ctx))})
-                            :handle-created ::res))
+                            :handle-created ::res
+                            :handle-exception (fn [ctx] {::error (.getMessage (:exception ctx))})))  
                      (ANY "/locations/:id" [id] 
                           (resource 
                             :allowed-methods [:get :put :delete]
