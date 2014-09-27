@@ -63,7 +63,6 @@
 (defn validate-location-query [query]
   (s/validate FilterQuery query))
 
-
 (def Geocodes 
   {(s/required-key :lat) double
    (s/required-key :lon) double})
@@ -77,11 +76,3 @@
 
 (defn validate-location-id [location-id]
   (s/validate s/Str location-id))
-
-
-
-
-
-
-
-
