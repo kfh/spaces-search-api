@@ -121,7 +121,7 @@
           (esi/refresh conn index)
           (is (= (:id location) (:id index-res)))
           (let [update-location (partial storage/update-location conn index m-type)]
-            (update-location {:geocodes {:lat 13.896532 :lon 100.77885544}} (:id location))
+            (update-location (:id location) {:geocodes {:lat 13.896532 :lon 100.77885544}})
             (let [updated-location (esd/get conn index m-type (:id location))]
               (is (= 13.896532 (-> updated-location :source :geocodes :lat)))
               (is (= 100.77885544 (-> updated-location :source :geocodes :lon)))))))
