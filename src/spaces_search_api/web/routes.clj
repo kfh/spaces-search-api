@@ -3,7 +3,7 @@
             [compojure.core :refer :all]
             [compojure.route :as route]
             [taoensso.timbre :as timbre]
-            [liberator.core :refer [resource]]
+            [liberator.core :refer [defresource]]
             [spaces-search-api.service.locations :as service]   
             [com.stuartsierra.component :as component]))
 
@@ -35,6 +35,34 @@
   (let [{:keys [conn index]} db] 
     (service/refresh-location conn index)))
 
+(defresource refresh-resource [es]
+  :allowed-methods [:get]
+  :available-media-types ["application/json"] 
+  :handle-ok (fn [_] (refresh-location es)))
+
+(defresource query-resource [es]
+  :allowed-methods [:get]
+  :available-media-types ["application/json"] 
+  :handle-ok (fn [ctx] (query-location es ctx))
+  :handle-exception (fn [ctx] {::error (.getMessage (:exception ctx))}))
+
+(defresource create-resource [es] 
+  :allowed-methods [:post]
+  :available-media-types ["application/json"]  
+  :post! (fn [ctx] {::res (index-location es (:request ctx))})
+  :handle-created ::res
+  :handle-exception (fn [ctx] {::error (.getMessage (:exception ctx))}))
+
+(defresource location-resource [es id]
+  :allowed-methods [:get :put :delete]
+  :available-media-types ["application/json"] 
+  :exists? (fn [_] (when-let [loc (get-location es id)] {::res loc}))
+  :handle-ok ::res   
+  :put! (fn [ctx] {::res (update-location es id (:request ctx))})   
+  :handle-created ::res
+  :delete! (fn [_] (delete-location es id))
+  :handle-exception (fn [ctx] {::error (.getMessage (:exception ctx))}))
+
 (defrecord ApiRoutes [es]
   component/Lifecycle
 
@@ -42,37 +70,12 @@
     (info "Enabling api routes")
     (if (:routes this)
       this 
-      (let [api-routes 
-            (context "/api" []
-                     (ANY "/locations/refresh" [] 
-                          (resource
-                            :allowed-methods [:get]
-                            :available-media-types ["application/json"] 
-                            :handle-ok (fn [_] (refresh-location es))))
-                     (ANY "/locations/query" [] 
-                          (resource 
-                            :allowed-methods [:get]
-                            :available-media-types ["application/json"] 
-                            :handle-ok (fn [ctx] (query-location es ctx))
-                            :handle-exception (fn [ctx] {::error (.getMessage (:exception ctx))})))
-                     (ANY "/locations" []
-                          (resource 
-                            :allowed-methods [:post]
-                            :available-media-types ["application/json"]  
-                            :post! (fn [ctx] {::res (index-location es (:request ctx))})
-                            :handle-created ::res
-                            :handle-exception (fn [ctx] {::error (.getMessage (:exception ctx))})))  
-                     (ANY "/locations/:id" [id] 
-                          (resource 
-                            :allowed-methods [:get :put :delete]
-                            :available-media-types ["application/json"] 
-                            :exists? (fn [_] (when-let [loc (get-location es id)] {::res loc}))
-                            :handle-ok ::res   
-                            :put! (fn [ctx] {::res (update-location es id (:request ctx))})   
-                            :handle-created ::res
-                            :delete! (fn [_] (delete-location es id))
-                            :handle-exception (fn [ctx] {::error (.getMessage (:exception ctx))}))))]
-        (assoc this :routes api-routes))))
+      (->> (context "/api" []
+                    (ANY "/locations/refresh" [] (refresh-resource es))
+                    (ANY "/locations/query" [] (query-resource es))
+                    (ANY "/locations" [] (create-resource es))  
+                    (ANY "/locations/:id" [id] (location-resource es id)))
+           (assoc this :routes))))
 
   (stop [this]
     (info "Disabling api routes")
