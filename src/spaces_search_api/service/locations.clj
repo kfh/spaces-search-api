@@ -7,7 +7,6 @@
 
 (defn query-location [conn index m-type query]
   (-> query
-      (domain/coerce-location-query)
       (domain/validate-location-query)  
       (as-> val-query
         (storage/query-location (:filter val-query) conn index m-type val-query))))

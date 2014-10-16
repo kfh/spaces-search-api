@@ -2,7 +2,7 @@
   (:require [compojure.handler :as handler]
             [taoensso.timbre :as timbre]
             [com.stuartsierra.component :as component]  
-            [ring.middleware.json :refer [wrap-json-body wrap-json-params wrap-json-response]]))
+            [ring.middleware.transit :refer [wrap-transit-params]]))
 
 (timbre/refer-timbre)
 
@@ -17,9 +17,7 @@
              (-> api-routes 
                  :routes 
                  (handler/api)
-                 (wrap-json-body {:keywords? true})
-                 (wrap-json-params)
-                 (wrap-json-response)))))
+                 (wrap-transit-params)))))
 
   (stop [this]
     (info "Disabling ring handler")
