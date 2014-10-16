@@ -37,7 +37,6 @@
     (service/refresh-location conn index)))
 
 (defresource refresh-resource [es]
-  :exists? {:liberator-transit {:allow-json-verbose? false}}
   :allowed-methods [:get]
   :available-media-types ["application/transit+json"] 
   :handle-ok (fn [_] (refresh-location es))
