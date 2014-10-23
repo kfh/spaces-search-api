@@ -9,7 +9,6 @@
                  [im.chit/hara "2.1.3"] 
                  [ring-transit "0.1.2"]
                  [im.chit/ribol "0.3.3"]
-                 [ring/ring-json "0.3.1"] 
                  [prismatic/schema "0.3.0"]
                  [org.clojure/clojure "1.6.0"]
                  [com.taoensso/timbre "3.3.1"]
