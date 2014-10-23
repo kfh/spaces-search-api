@@ -11,9 +11,7 @@
     #'system
     (constantly 
       (sys/spaces-system
-        {:db-host "127.0.0.1"
-         :db-ports {:web 9200 :native 9300}
-         :http-host "127.0.0.1"
+        {:http-host "127.0.0.1"
          :http-port 9999}))))
 
 (defn start []

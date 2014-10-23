@@ -3,27 +3,31 @@
   (:require [taoensso.timbre :as timbre] 
             [spaces-search-api.storage.db :as db]
             [spaces-search-api.web.routes :as routes]
-            [spaces-search-api.web.handler :as handler]
+            [spaces-search-api.env.variables :as env]
             [spaces-search-api.web.server :as server]
+            [spaces-search-api.web.handler :as handler]
             [com.stuartsierra.component :as component]))
 
 (timbre/refer-timbre)
 
 (defn spaces-test-db []
   (component/system-map
-      :es (db/es-test)))
+    :env (env/environment)  
+    :es (db/elasticsearch)))
 
 (defn spaces-test-system []
   (component/system-map
-    :es (db/es-test)
+    :env (env/environment)
+    :es (db/elasticsearch)
     :api-routes (routes/api-routes)
     :ring-handler (handler/ring-handler)
     :web-server (server/web-server-test)))
 
 (defn spaces-system [config]
-  (let [{:keys [db-host db-ports http-host http-port]} config]
+  (let [{:keys [http-host http-port]} config]
     (component/system-map
-      :es (db/es db-host db-ports)
+      :env (env/environment)
+      :es (db/elasticsearch)
       :api-routes (routes/api-routes)
       :ring-handler (handler/ring-handler)
       :web-server (server/web-server http-host http-port))))
@@ -35,9 +39,7 @@
     #'system
     (constantly
       (spaces-system
-        {:db-host "127.0.0.1"
-         :db-ports {:web 9200 :native 9300}
-         :http-host "127.0.0.1"
+        {:http-host "127.0.0.1"
          :http-port 4444}))))
 
 (defn start []
