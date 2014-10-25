@@ -3,6 +3,7 @@
             [taoensso.timbre :as timbre]
             [clojurewerkz.elastisch.native :as es] 
             [clojurewerkz.elastisch.native.index :as esi]
+            [clojurewerkz.elastisch.native.response :as res] 
             [com.stuartsierra.component :as component]))
 
 (timbre/refer-timbre)
@@ -22,7 +23,7 @@
         (when-not (esi/exists? conn index)
           (info "Creating index: " index)
           (-> (esi/create conn index :mappings mapping-types)
-              :ok
+              (res/acknowledged?)
               (assert)))
         (assoc this :conn conn :index index :m-type m-type))))
 
