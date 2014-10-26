@@ -1,6 +1,6 @@
 (ns spaces-search-api.web.server
   (:require [taoensso.timbre :as timbre]
-            [ring.adapter.jetty :refer [run-jetty]]  
+            [org.httpkit.server :refer [run-server]] 
             [com.stuartsierra.component :as component]))
 
 (timbre/refer-timbre)
@@ -13,7 +13,7 @@
     (if (:server this) 
       this
       (assoc this :server
-             (run-jetty 
+             (run-server 
                (:handler ring-handler) 
                {:host host :port port :join? false}))))
 
@@ -21,8 +21,9 @@
     (info "Stopping web server")
     (if-not (:server this) 
       this
-      (do (.stop (:server this))
-          (dissoc this :server)))))
+      (let [server (:server this)]
+        (server)
+        (dissoc this :server)))))
 
 (defn web-server [host port]
   (component/using 
