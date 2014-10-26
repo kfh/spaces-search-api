@@ -10,7 +10,9 @@
 
 (timbre/refer-timbre)
 
-(def config (clojure.edn/read-string (slurp "resources/spaces-conf.edn")))
+(def config (-> "resources/spaces-search-api-conf.edn" 
+                (slurp)
+                (clojure.edn/read-string)))
 
 (defn spaces-test-db []
   (component/system-map
