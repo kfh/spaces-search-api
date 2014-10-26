@@ -11,8 +11,8 @@
     #'system
     (constantly 
       (sys/spaces-system
-        {:http-host "127.0.0.1"
-         :http-port 9999}))))
+        {:web-host "127.0.0.1"
+         :web-port 4444}))))
 
 (defn start []
   (alter-var-root #'system component/start))
