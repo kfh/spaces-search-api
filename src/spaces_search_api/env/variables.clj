@@ -43,4 +43,6 @@
       (:es-cluster-name this) (dissoc :es-cluster-name))))
 
 (defn environment []
-  (map->Environment {}))
+  (component/using 
+    (map->Environment {})
+     [:logger]))

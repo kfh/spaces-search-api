@@ -6,6 +6,7 @@
             [spaces-search-api.env.variables :as env]
             [spaces-search-api.web.server :as server]
             [spaces-search-api.web.handler :as handler]
+            [spaces-search-api.logger.loggers :as logger]
             [com.stuartsierra.component :as component]))
 
 (timbre/refer-timbre)
@@ -21,6 +22,7 @@
 
 (defn spaces-test-system []
   (component/system-map
+    :logger (logger/rolling-file-appender)
     :env (env/environment)
     :es (db/elasticsearch)
     :api-routes (routes/api-routes)
@@ -30,6 +32,7 @@
 (defn spaces-system [config]
   (let [{:keys [web-host web-port]} config]
     (component/system-map
+      :logger (logger/rolling-file-appender)
       :env (env/environment)
       :es (db/elasticsearch)
       :api-routes (routes/api-routes)
