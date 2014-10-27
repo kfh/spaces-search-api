@@ -46,3 +46,6 @@
   (component/using 
     (map->Environment {})
      [:logger]))
+
+(defn environment-without-logging []
+  (map->Environment {}))
