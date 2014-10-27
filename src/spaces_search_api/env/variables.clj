@@ -47,5 +47,5 @@
     (map->Environment {})
      [:logger]))
 
-(defn environment-without-logging []
+(defn environment-without-logger []
   (map->Environment {}))

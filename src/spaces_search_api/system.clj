@@ -17,12 +17,12 @@
 
 (defn spaces-test-db []
   (component/system-map
-    :env (env/environment-without-logging)  
+    :env (env/environment-without-logger)  
     :es (db/elasticsearch)))
 
 (defn spaces-test-system []
   (component/system-map
-    :env (env/environment-without-logging)
+    :env (env/environment-without-logger)
     :es (db/elasticsearch)
     :api-routes (routes/api-routes)
     :ring-handler (handler/ring-handler)
