@@ -33,11 +33,7 @@
     (if-not (:conn this) 
       this
       (let [{:keys [conn index]} this] 
-        (do
-          (when (esi/exists? conn index)
-            (info "Deleting index: " index)
-            (esi/delete conn index))
-          (dissoc this :conn :index :m-type))))))
+        (dissoc this :conn :index :m-type)))))
 
 (defrecord ElasticsearchTest []
   component/Lifecycle
@@ -46,16 +42,15 @@
     (info "Starting Elasticsearch")
     (if (:es this) 
       this
-      (let [es (create)
+      (let [es (create {:disable-http? true})
             conn (client es) 
             index "spaces_test"
             m-type "location"
             mapping-types {"location" {:properties {:geocodes {:type "geo_point"}}}}]
-        (when-not (esi/exists? conn index)
-          (info "Creating index: " index)
-          (-> (esi/create conn index :mappings mapping-types)
-              (esrsp/acknowledged?)
-              (assert)))
+        (info "Creating index: " index)
+        (-> (esi/create conn index :mappings mapping-types)
+            (esrsp/acknowledged?)
+            (assert))
         (assoc this :es es :conn conn :index index :m-type m-type))))
 
   (stop [this]
@@ -63,12 +58,10 @@
     (if-not (:es this) 
       this
       (let [{:keys [es conn index]} this] 
-        (do
-          (when (esi/exists? conn index)
-            (info "Deleting index: " index)
-            (esi/delete conn index))
-          (stop es)
-          (dissoc this :es :conn :index :m-type))))))
+        (info "Deleting index: " index)
+        (esi/delete conn index)
+        (stop es)
+        (dissoc this :es :conn :index :m-type)))))
 
 (defn elasticsearch []
   (component/using 
