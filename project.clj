@@ -4,6 +4,7 @@
   :dependencies [[ring "1.3.2"]
                  [environ "1.0.0"]
                  [clj-http "1.0.1"]
+                 [clj-time "0.8.0"]
                  [http-kit "2.1.19"]
                  [compojure "1.3.1"]
                  [liberator "0.12.2"]

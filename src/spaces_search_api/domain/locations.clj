@@ -69,6 +69,7 @@
 
 (def Location
   {(s/required-key :id) s/Str
+   (s/required-key :ts) s/Inst
    (s/required-key :geocodes) Geocodes})
 
 (defn validate-location [location]
