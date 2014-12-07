@@ -1,13 +1,13 @@
 (defproject spaces-search-api "0.1.0-SNAPSHOT"
   :description "FIXME: write description"
   :url "http://example.com/FIXME"
-  :dependencies [[ring "1.3.1"]
+  :dependencies [[ring "1.3.2"]
                  [environ "1.0.0"]
                  [clj-http "1.0.1"]
                  [http-kit "2.1.19"]
-                 [compojure "1.2.1"]
+                 [compojure "1.3.1"]
                  [liberator "0.12.2"]
-                 [rubberlike "0.1.2"]
+                 [rubberlike "0.2.0"]
                  [ring-transit "0.1.2"]
                  [im.chit/ribol "0.4.0"]
                  [prismatic/schema "0.3.3"]
@@ -18,7 +18,7 @@
                  [com.stuartsierra/component "0.2.2"] 
                  [com.cognitect/transit-clj "0.8.259"]
                  [io.clojure/liberator-transit "0.3.0"]
-                 [clojurewerkz/elastisch "2.1.0-rc1"]]
+                 [clojurewerkz/elastisch "2.1.0"]]
   :plugins [[lein-ring "0.8.11"]]
   :profiles {:dev {:source-paths ["dev"]
                    :dependencies [[org.clojure/tools.namespace "0.2.7"]
