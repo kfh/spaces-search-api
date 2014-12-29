@@ -61,7 +61,10 @@
     BoundingBoxFilterQuery))
 
 (defn validate-location-query [query]
-  (s/validate FilterQuery query))
+  (try
+    [(s/validate FilterQuery query) nil]
+    (catch clojure.lang.ExceptionInfo e
+      [nil (ex-data e)])))
 
 (def Geocodes 
   {(s/required-key :lat) double
@@ -73,7 +76,13 @@
    (s/required-key :geocodes) Geocodes})
 
 (defn validate-location [location]
-  (s/validate Location location))
+  (try 
+    [(s/validate Location location) nil]
+    (catch clojure.lang.ExceptionInfo e
+      [nil (ex-data e)])))
 
 (defn validate-location-id [location-id]
-  (s/validate s/Str location-id))
+  (try 
+    [(s/validate s/Str location-id) nil]
+    (catch clojure.lang.ExceptionInfo e
+      [nil (ex-data e)])))

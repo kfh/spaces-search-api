@@ -8,28 +8,50 @@
 (defn query-location [conn index m-type query]
   (-> query
       (domain/validate-location-query)  
-      (as-> val-query
-        (storage/query-location (:filter val-query) conn index m-type val-query))))
+      (as-> validated-query
+        (let [[query error] validated-query]  
+          (if error
+            error
+            (storage/query-location (:filter query) conn index m-type query))))))
 
 (defn index-location [conn index m-type location]
-  (->> location
-       (domain/validate-location)
-       (storage/index-location conn index m-type)))
+  (-> location
+      (domain/validate-location)
+      (as-> validated-location
+        (let [[location error] validated-location]
+          (if error
+            error
+            (storage/index-location conn index m-type location))))))
 
 (defn update-location [conn index m-type location-id location]
-  (->> location
-       (domain/validate-location)
-       (storage/update-location conn index m-type (domain/validate-location-id location-id))))
+  (let [[location-id error] (domain/validate-location-id location-id)] 
+    (if error
+      error
+      (-> location
+          (domain/validate-location)
+          (as-> validated-location
+            (let [[location error] validated-location]
+              (if error
+                error
+                (storage/update-location conn index m-type location-id location))))))))
 
 (defn delete-location [conn index m-type location-id]
-  (->> location-id
-       (domain/validate-location-id)
-       (storage/delete-location conn index m-type)))
+  (-> location-id
+      (domain/validate-location-id)
+      (as-> validated-location-id
+        (let [[location-id error] validated-location-id]
+          (if error
+            error
+            (storage/delete-location conn index m-type location-id))))))
 
 (defn get-location [conn index m-type location-id]
-  (->> location-id
-       (domain/validate-location-id)
-       (storage/get-location conn index m-type)))
+  (-> location-id
+      (domain/validate-location-id)
+      (as-> validated-location-id 
+        (let [[location-id error] validated-location-id]
+          (if error
+            error
+            (storage/get-location conn index m-type location-id))))))
 
 (defn refresh-location [conn index]
   (storage/refresh-index conn index))
