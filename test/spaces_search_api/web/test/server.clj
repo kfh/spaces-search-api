@@ -15,7 +15,7 @@
     (try 
       (testing "Index and query for location using distance filter"
         (let [ts-now (tc/to-timestamp (time/now))
-              loc {:id (str (uuid)) :ts ts-now :geocodes {:lat 13.734603 :lon 100.5639662}}
+              loc {:id (str (uuid)) :_timestamp ts-now :geocodes {:lat 13.734603 :lon 100.5639662}}
               url (str "http://" (:host web-server) ":" (:port web-server))
               post (partial http/post (str url "/api/locations"))
               res (post {:form-params loc :content-type :transit+json :as :transit+json})]
@@ -42,7 +42,7 @@
     (try 
       (testing "Index and query for location using distance range filter"
         (let [ts-now (tc/to-timestamp (time/now))
-              loc {:id (str (uuid)) :ts ts-now :geocodes {:lat 13.734603 :lon 100.5639662}}
+              loc {:id (str (uuid)) :_timestamp ts-now :geocodes {:lat 13.734603 :lon 100.5639662}}
               url (str "http://" (:host web-server) ":" (:port web-server))
               post (partial http/post (str url "/api/locations"))
               res (post {:form-params loc :content-type :transit+json :as :transit+json})]
@@ -69,7 +69,7 @@
     (try 
       (testing "Index and query for location using polygon filter"
         (let [ts-now (tc/to-timestamp (time/now))
-              loc {:id (str (uuid)) :ts ts-now :geocodes {:lat 13.734603 :lon 100.5639662}}
+              loc {:id (str (uuid)) :_timestamp ts-now :geocodes {:lat 13.734603 :lon 100.5639662}}
               url (str "http://" (:host web-server) ":" (:port web-server))
               post (partial http/post (str url "/api/locations"))
               res (post {:form-params loc :content-type :transit+json :as :transit+json})]
@@ -96,7 +96,7 @@
     (try 
       (testing "Index and query for location using bounding box filter"
         (let [ts-now (tc/to-timestamp (time/now))
-              loc {:id (str (uuid)) :ts ts-now :geocodes {:lat 13.734603 :lon 100.5639662}}
+              loc {:id (str (uuid)) :_timestamp ts-now :geocodes {:lat 13.734603 :lon 100.5639662}}
               url (str "http://" (:host web-server) ":" (:port web-server))
               post (partial http/post (str url "/api/locations"))
               res (post {:form-params loc :content-type :transit+json :as :transit+json})]
@@ -123,14 +123,14 @@
     (try 
       (testing "Index and update location"
         (let [ts-now (tc/to-timestamp (time/now))
-              loc {:id (str (uuid)) :ts ts-now :geocodes {:lat 13.734603 :lon 100.5639662}}
+              loc {:id (str (uuid)) :_timestamp ts-now :geocodes {:lat 13.734603 :lon 100.5639662}}
               url (str "http://" (:host web-server) ":" (:port web-server))
               post (partial http/post (str url "/api/locations"))
               res (post {:form-params loc :content-type :transit+json :as :transit+json})]
           (http/get (str url "/api/locations/refresh"))
           (is (= (:id loc) (-> res :body :id)))
           (let [update-location (partial http/put (str url "/api/locations/" (:id loc)))]
-            (update-location {:form-params {:id (:id loc) :ts (:ts loc) :geocodes {:lat 13.896532 :lon 100.77885544}} :content-type :transit+json})
+            (update-location {:form-params {:id (:id loc) :_timestamp (:_timestamp loc) :geocodes {:lat 13.896532 :lon 100.77885544}} :content-type :transit+json})
             (let [updated-location (http/get (str url "/api/locations/" (:id loc)) {:as :transit+json})]
               (is (= 13.896532  (-> updated-location :body :source :geocodes :lat)))
               (is (= 100.77885544 (-> updated-location :body :source :geocodes :lon)))))))   
@@ -143,7 +143,7 @@
     (try 
       (testing "Index and delete location"
         (let [ts-now (tc/to-timestamp (time/now))
-              loc {:id (str (uuid)) :ts ts-now :geocodes {:lat 13.734603 :lon 100.5639662}}
+              loc {:id (str (uuid)) :_timestamp ts-now :geocodes {:lat 13.734603 :lon 100.5639662}}
               url (str "http://" (:host web-server) ":" (:port web-server))
               post (partial http/post (str url "/api/locations"))
               res (post {:form-params loc :content-type :transit+json :as :transit+json})]
