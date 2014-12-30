@@ -1,7 +1,7 @@
-(ns spaces-search-api.service.locations
+(ns spaces-search-api-server.service.locations
   (:require [taoensso.timbre :as timbre]
-            [spaces-search-api.domain.locations :as domain]  
-            [spaces-search-api.storage.locations :as storage]))
+            [spaces-search-api-server.domain.locations :as domain]  
+            [spaces-search-api-server.storage.locations :as storage]))
 
 (timbre/refer-timbre)
 

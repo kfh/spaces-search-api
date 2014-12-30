@@ -1,7 +1,7 @@
 (ns user
   (:require [clojure.repl :refer :all]
             [clojure.tools.namespace.repl :refer [refresh]]
-            [spaces-search-api.system :as sys] 
+            [spaces-search-api-server.system :as sys] 
             [com.stuartsierra.component :as component]))
 
 (def system nil)

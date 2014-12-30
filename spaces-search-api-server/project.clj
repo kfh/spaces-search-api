@@ -1,4 +1,4 @@
-(defproject spaces-search-api "0.1.0-SNAPSHOT"
+(defproject spaces-search-api-server "0.1.0-SNAPSHOT"
   :description "FIXME: write description"
   :url "http://example.com/FIXME"
   :dependencies [[ring "1.3.2"]
@@ -26,5 +26,5 @@
                                   [org.clojure/java.classpath "0.2.2"]
                                   [javax.servlet/servlet-api "2.5"]
                                   [ring-mock "0.1.5"]]}
-             :uberjar {:main spaces-search-api.system
-                       :aot [spaces-search-api.system]}})
+             :uberjar {:main spaces-search-api-server.system
+                       :aot [spaces-search-api-server.system]}})

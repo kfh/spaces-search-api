@@ -1,4 +1,4 @@
-(ns spaces-search-api.web.server
+(ns spaces-search-api-server.web.server
   (:require [taoensso.timbre :as timbre]
             [org.httpkit.server :refer [run-server]] 
             [com.stuartsierra.component :as component]))

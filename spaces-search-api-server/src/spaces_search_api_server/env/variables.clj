@@ -1,4 +1,4 @@
-(ns spaces-search-api.env.variables
+(ns spaces-search-api-server.env.variables
   (:require [environ.core :refer [env]]
             [ribol.core :refer [raise]]
             [taoensso.timbre :as timbre]

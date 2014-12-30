@@ -1,4 +1,4 @@
-(ns spaces-search-api.storage.locations
+(ns spaces-search-api-server.storage.locations
   (:require [taoensso.timbre :as timbre]
             [clojurewerkz.elastisch.query :as q]
             [clojurewerkz.elastisch.native.index :as esi]

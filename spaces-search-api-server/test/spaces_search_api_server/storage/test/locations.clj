@@ -1,7 +1,7 @@
-(ns spaces-search-api.storage.test.locations
+(ns spaces-search-api-server.storage.test.locations
   (:require [hara.common :refer [uuid]] 
-            [spaces-search-api.storage.locations :as storage]  
-            [spaces-search-api.system :refer [spaces-test-db]]  
+            [spaces-search-api-server.storage.locations :as storage]  
+            [spaces-search-api-server.system :refer [spaces-test-db]]  
             [clojure.test :refer [deftest testing is]]
             [com.stuartsierra.component :as component]
             [clojurewerkz.elastisch.native.index :as esi]
