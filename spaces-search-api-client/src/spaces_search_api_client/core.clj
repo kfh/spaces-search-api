@@ -30,7 +30,7 @@
          {:url url 
           :method method}
          body (assoc :body (str (write-transit body)))
-         (or (= :put method) (= :post method)) 
+         (contains? #{:put :post} method) 
            (assoc :headers {"Content-Type" "application/transit+json"})) 
        (fn [req] (put! c req)))
      c)))
