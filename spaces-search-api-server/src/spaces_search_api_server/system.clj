@@ -1,13 +1,15 @@
 (ns spaces-search-api-server.system
   (:gen-class)
   (:require [taoensso.timbre :as timbre] 
+            [com.stuartsierra.component :as component]   
             [spaces-search-api-server.storage.db :as db]
             [spaces-search-api-server.web.routes :as routes]
             [spaces-search-api-server.env.variables :as env]
             [spaces-search-api-server.web.server :as server]
+            [spaces-search-api-server.service.queue :as queue]
             [spaces-search-api-server.web.handler :as handler]
             [spaces-search-api-server.logger.loggers :as logger]
-            [com.stuartsierra.component :as component]))
+            [spaces-search-api-server.service.subscriber :as subscriber]))
 
 (timbre/refer-timbre)
 
@@ -32,6 +34,8 @@
       :logger (logger/rolling-file-appender)
       :env (env/environment)
       :es (db/elasticsearch)
+      :queue (queue/zeromq)
+      :subscriber (subscriber/zeromq-subscriber)
       :api-routes (routes/api-routes)
       :ring-handler (handler/ring-handler)
       :web-server (server/web-server web-host web-port))))

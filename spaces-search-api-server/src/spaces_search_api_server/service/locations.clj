@@ -23,6 +23,14 @@
             error
             (storage/index-location conn index m-type location))))))
 
+(defn index-locations [conn index m-type locations]
+  (for [location locations] 
+    (-> location
+        (dissoc :added) 
+        (clojure.set/rename-keys {:timestamp :_timestamp}) 
+        (as-> parsed-location
+          (index-location conn index m-type parsed-location)))))
+
 (defn update-location [conn index m-type location-id location]
   (let [[location-id error] (domain/validate-location-id location-id)] 
     (if error

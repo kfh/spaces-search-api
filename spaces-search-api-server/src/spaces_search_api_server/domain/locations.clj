@@ -1,28 +1,8 @@
 (ns spaces-search-api-server.domain.locations
   (:require [schema.core :as s]
-            [schema.coerce :as coerce]
             [taoensso.timbre :as timbre]))
 
 (def filters (s/enum :distance-filter :distance-range-filter :polygon-filter :bounding-box-filter))
-
-(def Query {(s/optional-key :lat) double
-            (s/optional-key :long) double
-            (s/optional-key :lat-1) double
-            (s/optional-key :long-1) double
-            (s/optional-key :lat-2) double
-            (s/optional-key :long-2) double
-            (s/optional-key :lat-3) double
-            (s/optional-key :long-3) double
-            (s/optional-key :lat-top) double
-            (s/optional-key :long-top) double
-            (s/optional-key :lat-bottom) double
-            (s/optional-key :long-bottom) double
-            (s/optional-key :distance) String 
-            (s/optional-key :from-distance) String
-            (s/optional-key :to-distance) String
-            (s/required-key :filter) filters})
-
-(def coerce-location-query (coerce/coercer Query coerce/json-coercion-matcher))
 
 (def DistanceFilterQuery
   {(s/required-key :distance) s/Str 
