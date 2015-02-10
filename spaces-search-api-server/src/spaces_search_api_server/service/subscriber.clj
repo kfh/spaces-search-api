@@ -2,7 +2,7 @@
   (:require [taoensso.timbre :as timbre]
             [cognitect.transit :as transit]
             [com.stuartsierra.component :as component]
-            [clojure.core.async :refer [chan close! go-loop]]
+            [clojure.core.async :refer [<! chan close! go-loop]]
             [spaces-search-api-server.service.locations :as service])
   (import [java.io ByteArrayInputStream]))
 
