@@ -2,7 +2,7 @@
   (:require [taoensso.timbre :as timbre]
             [cognitect.transit :as transit]
             [com.stuartsierra.component :as component]
-            [clojure.core.async :refer [<! chan close! go-loop]]
+            [clojure.core.async :refer [<! close! go-loop]]
             [spaces-search-api-server.service.locations :as service])
   (import [java.io ByteArrayInputStream]))
 
@@ -32,13 +32,18 @@
     (info "Starting ZeroMQ subscriber")
     (if (:subscriber this)
       this
-      (take-and-index-geolocations es (:sub-channel queue))))
+      (->> queue 
+           :sub-channel
+           (take-and-index-geolocations es)
+           (assoc this :subscriber))))
 
   (stop [this]
     (info "Stopping ZeroMQ subscriber")
     (if-not (:subscriber this)
       this
-      (dissoc this :subscriber))))
+      (do
+        (close! (:subscriber this))
+        (dissoc this :subscriber)))))
 
 (defn zeromq-subscriber []
   (component/using
