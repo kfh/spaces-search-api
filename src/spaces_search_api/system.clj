@@ -1,11 +1,11 @@
 (ns spaces-search-api.system
   (:gen-class)
   (:require [taoensso.timbre :as timbre] 
-            [com.stuartsierra.component :as component]   
             [spaces-search-api.storage.db :as db]
             [spaces-search-api.web.routes :as routes]
             [spaces-search-api.env.variables :as env]
             [spaces-search-api.web.server :as server]
+            [com.stuartsierra.component :as component]   
             [spaces-search-api.service.queue :as queue]
             [spaces-search-api.web.handler :as handler]
             [spaces-search-api.logger.loggers :as logger]
@@ -13,7 +13,7 @@
 
 (timbre/refer-timbre)
 
-(def config (-> "resources/spaces-search-api-server-conf.edn" 
+(def config (-> "resources/spaces-search-api-conf.edn" 
                 (slurp)
                 (clojure.edn/read-string)))
 
