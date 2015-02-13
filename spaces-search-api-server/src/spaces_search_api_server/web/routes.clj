@@ -31,10 +31,6 @@
   (let [{:keys [conn index m-type]} db] 
     (service/get-location conn index m-type location-id)))
 
-(defn- refresh-location [db]
-  (let [{:keys [conn index]} db] 
-    (service/refresh-location conn index)))
-
 (defn- parse-transit-json [ctx key]
   (if-let [body (-> ctx :request :body)]
     (try 
@@ -58,12 +54,6 @@
     (let [location (-> ctx :request :params)] 
       (validate domain/validate-location location key))
     true))
-
-(defresource refresh-resource [es]
-  :allowed-methods [:get]
-  :available-media-types ["application/transit+json"] 
-  :as-response (as-response {:allow-json-verbose? false}) 
-  :handle-ok (fn [_] (refresh-location es)))
 
 (defresource query-resource [es]
   :allowed-methods [:get]
@@ -106,7 +96,6 @@
     (if (:routes this)
       this 
       (->> (context "/api" []
-                    (ANY "/locations/refresh" [] (refresh-resource es))
                     (ANY "/locations/query" [] (query-resource es))
                     (ANY "/locations" [] (create-resource es))  
                     (ANY "/locations/:id" [id] (location-resource es id)))

@@ -51,8 +51,14 @@
         hits (esr/total-hits res)]
     {:hits hits :ids (esr/ids-from res)}))
 
+(defn query-freshest-location [conn index m-type]
+  (let [res (esd/search conn index m-type :query (q/match-all) :sort {:timestamp "desc"})
+        hits (esr/total-hits res)
+        hits-from (esr/hits-from res)]
+    {:hits hits :source (-> hits-from first :_source)}))
+
 (defn index-location [conn index m-type location]
-  @(esd/async-put conn index m-type (:id location) location))
+  @(esd/async-put conn index m-type (:id location) location :refresh (:refresh location)))
 
 (defn update-location [conn index m-type location-id location]
   @(esd/async-put conn index m-type location-id location))
@@ -62,6 +68,3 @@
 
 (defn get-location [conn index m-type location-id]
   (esd/get conn index m-type location-id))
-
-(defn refresh-index [conn index]
-  (esi/refresh conn index))

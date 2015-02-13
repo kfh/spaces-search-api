@@ -14,6 +14,9 @@
             error
             (storage/query-location (:filter query) conn index m-type query))))))
 
+(defn query-freshest-location [conn index m-type query]
+  (storage/query-freshest-location conn index m-type query))
+
 (defn index-location [conn index m-type location]
   (-> location
       (domain/validate-location)
@@ -27,7 +30,6 @@
   (for [location locations] 
     (-> location
         (dissoc :added) 
-        (clojure.set/rename-keys {:timestamp :_timestamp}) 
         (as-> parsed-location
           (index-location conn index m-type parsed-location)))))
 
@@ -60,6 +62,3 @@
           (if error
             error
             (storage/get-location conn index m-type location-id))))))
-
-(defn refresh-location [conn index]
-  (storage/refresh-index conn index))

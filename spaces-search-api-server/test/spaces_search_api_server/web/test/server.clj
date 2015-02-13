@@ -15,11 +15,10 @@
     (try 
       (testing "Index and query for location using distance filter"
         (let [ts-now (tc/to-timestamp (time/now))
-              loc {:id (str (uuid)) :_timestamp ts-now :geocodes {:lat 13.734603 :lon 100.5639662}}
+              loc {:id (str (uuid)) :timestamp ts-now :geocodes {:lat 13.734603 :lon 100.5639662} :refresh true}
               url (str "http://" (:host web-server) ":" (:port web-server))
               post (partial http/post (str url "/api/locations"))
               res (post {:form-params loc :content-type :transit+json :as :transit+json})]
-          (http/get (str url "/api/locations/refresh"))
           (is (= (:id loc) (-> res :body :id)))
           (let [query (partial http/get (str url "/api/locations/query"))
                 query-params {:distance "5km" :lat 13.7175831 :long 100.5899095 :filter :distance-filter}
@@ -42,11 +41,10 @@
     (try 
       (testing "Index and query for location using distance range filter"
         (let [ts-now (tc/to-timestamp (time/now))
-              loc {:id (str (uuid)) :_timestamp ts-now :geocodes {:lat 13.734603 :lon 100.5639662}}
+              loc {:id (str (uuid)) :timestamp ts-now :geocodes {:lat 13.734603 :lon 100.5639662} :refresh true}
               url (str "http://" (:host web-server) ":" (:port web-server))
               post (partial http/post (str url "/api/locations"))
               res (post {:form-params loc :content-type :transit+json :as :transit+json})]
-          (http/get (str url "/api/locations/refresh"))
           (is (= (:id loc) (-> res :body :id)))
           (let [query (partial http/get (str url "/api/locations/query"))
                 query-params {:from-distance "10km" :to-distance "50km" :lat 13.7175831 :long 100.5899095 :filter :distance-range-filter}
@@ -69,11 +67,10 @@
     (try 
       (testing "Index and query for location using polygon filter"
         (let [ts-now (tc/to-timestamp (time/now))
-              loc {:id (str (uuid)) :_timestamp ts-now :geocodes {:lat 13.734603 :lon 100.5639662}}
+              loc {:id (str (uuid)) :timestamp ts-now :geocodes {:lat 13.734603 :lon 100.5639662} :refresh true}
               url (str "http://" (:host web-server) ":" (:port web-server))
               post (partial http/post (str url "/api/locations"))
               res (post {:form-params loc :content-type :transit+json :as :transit+json})]
-          (http/get (str url "/api/locations/refresh"))
           (is (= (:id loc) (-> res :body :id)))
           (let [query (partial http/get (str url "/api/locations/query"))
                 query-params {:lat-1 13.71 :long-1 100.55 :lat-2 13.70 :long-2 100.54 :lat-3 13.69 :long-3 100.53 :filter :polygon-filter} 
@@ -96,11 +93,10 @@
     (try 
       (testing "Index and query for location using bounding box filter"
         (let [ts-now (tc/to-timestamp (time/now))
-              loc {:id (str (uuid)) :_timestamp ts-now :geocodes {:lat 13.734603 :lon 100.5639662}}
+              loc {:id (str (uuid)) :timestamp ts-now :geocodes {:lat 13.734603 :lon 100.5639662} :refresh true}
               url (str "http://" (:host web-server) ":" (:port web-server))
               post (partial http/post (str url "/api/locations"))
               res (post {:form-params loc :content-type :transit+json :as :transit+json})]
-          (http/get (str url "/api/locations/refresh"))
           (is (= (:id loc) (-> res :body :id)))
           (let [query (partial http/get (str url "/api/locations/query"))
                 query-params {:lat-top 13.7402 :long-top 100.5709 :lat-bottom 13.72 :long-bottom 100.5600 :filter :bounding-box-filter}
@@ -123,14 +119,13 @@
     (try 
       (testing "Index and update location"
         (let [ts-now (tc/to-timestamp (time/now))
-              loc {:id (str (uuid)) :_timestamp ts-now :geocodes {:lat 13.734603 :lon 100.5639662}}
+              loc {:id (str (uuid)) :timestamp ts-now :geocodes {:lat 13.734603 :lon 100.5639662} :refresh true}
               url (str "http://" (:host web-server) ":" (:port web-server))
               post (partial http/post (str url "/api/locations"))
               res (post {:form-params loc :content-type :transit+json :as :transit+json})]
-          (http/get (str url "/api/locations/refresh"))
           (is (= (:id loc) (-> res :body :id)))
           (let [update-location (partial http/put (str url "/api/locations/" (:id loc)))]
-            (update-location {:form-params {:id (:id loc) :_timestamp (:_timestamp loc) :geocodes {:lat 13.896532 :lon 100.77885544}} :content-type :transit+json})
+            (update-location {:form-params {:id (:id loc) :timestamp (:timestamp loc) :geocodes {:lat 13.896532 :lon 100.77885544}} :content-type :transit+json})
             (let [updated-location (http/get (str url "/api/locations/" (:id loc)) {:as :transit+json})]
               (is (= 13.896532  (-> updated-location :body :source :geocodes :lat)))
               (is (= 100.77885544 (-> updated-location :body :source :geocodes :lon)))))))   
@@ -143,11 +138,10 @@
     (try 
       (testing "Index and delete location"
         (let [ts-now (tc/to-timestamp (time/now))
-              loc {:id (str (uuid)) :_timestamp ts-now :geocodes {:lat 13.734603 :lon 100.5639662}}
+              loc {:id (str (uuid)) :timestamp ts-now :geocodes {:lat 13.734603 :lon 100.5639662} :refresh true}
               url (str "http://" (:host web-server) ":" (:port web-server))
               post (partial http/post (str url "/api/locations"))
               res (post {:form-params loc :content-type :transit+json :as :transit+json})]
-          (http/get (str url "/api/locations/refresh"))
           (is (= (:id loc) (-> res :body :id)))
           (is (= 204 (-> (http/delete (str url "/api/locations/" (:id loc))) :status)))
           (is (= 404 (-> (http/get (str url "/api/locations/" (:id loc)) {:throw-exceptions false}) :status)))))

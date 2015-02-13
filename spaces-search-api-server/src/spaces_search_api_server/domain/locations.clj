@@ -53,7 +53,8 @@
 (def Location
   {(s/required-key :id) s/Str
    (s/required-key :geocodes) Geocodes
-   (s/required-key :_timestamp) s/Inst})
+   (s/required-key :timestamp) s/Inst
+   (s/optional-key :refresh) boolean})
 
 (defn validate-location [location]
   (try 
