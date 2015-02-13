@@ -1,12 +1,12 @@
-(ns spaces-search-api-server.storage.test.locations
+(ns spaces-search-api.storage.test.locations
   (:require [clj-time.core :as time]
             [hara.common :refer [uuid]] 
             [clojure.test :refer [deftest testing is]]
             [com.stuartsierra.component :as component]
             [clojurewerkz.elastisch.native.index :as esi]
             [clojurewerkz.elastisch.native.document :as esd]
-            [spaces-search-api-server.storage.locations :as storage]  
-            [spaces-search-api-server.system :refer [spaces-test-db]]))  
+            [spaces-search-api.storage.locations :as storage]  
+            [spaces-search-api.system :refer [spaces-test-db]]))  
 
 (deftest index-and-query-location-with-distance-filter
   (let [system (component/start (spaces-test-db))

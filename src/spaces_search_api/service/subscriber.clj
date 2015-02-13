@@ -1,9 +1,9 @@
-(ns spaces-search-api-server.service.subscriber
+(ns spaces-search-api.service.subscriber
   (:require [taoensso.timbre :as timbre]
             [cognitect.transit :as transit]
             [com.stuartsierra.component :as component]
             [clojure.core.async :refer [<! close! go-loop]]
-            [spaces-search-api-server.service.locations :as service])
+            [spaces-search-api.service.locations :as service])
   (import [java.io ByteArrayInputStream]))
 
 (timbre/refer-timbre)

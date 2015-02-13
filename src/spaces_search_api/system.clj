@@ -1,15 +1,15 @@
-(ns spaces-search-api-server.system
+(ns spaces-search-api.system
   (:gen-class)
   (:require [taoensso.timbre :as timbre] 
             [com.stuartsierra.component :as component]   
-            [spaces-search-api-server.storage.db :as db]
-            [spaces-search-api-server.web.routes :as routes]
-            [spaces-search-api-server.env.variables :as env]
-            [spaces-search-api-server.web.server :as server]
-            [spaces-search-api-server.service.queue :as queue]
-            [spaces-search-api-server.web.handler :as handler]
-            [spaces-search-api-server.logger.loggers :as logger]
-            [spaces-search-api-server.service.subscriber :as subscriber]))
+            [spaces-search-api.storage.db :as db]
+            [spaces-search-api.web.routes :as routes]
+            [spaces-search-api.env.variables :as env]
+            [spaces-search-api.web.server :as server]
+            [spaces-search-api.service.queue :as queue]
+            [spaces-search-api.web.handler :as handler]
+            [spaces-search-api.logger.loggers :as logger]
+            [spaces-search-api.service.subscriber :as subscriber]))
 
 (timbre/refer-timbre)
 

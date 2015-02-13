@@ -1,4 +1,4 @@
-(ns spaces-search-api-server.web.test.server
+(ns spaces-search-api.web.test.server
   (:require [clj-time.core :as time]
             [clj-time.coerce :as tc]
             [hara.common :refer [uuid]]
@@ -6,7 +6,7 @@
             [cognitect.transit :as transit]
             [clojure.test :refer [deftest testing is]]
             [com.stuartsierra.component :as component]  
-            [spaces-search-api-server.system :refer [spaces-test-system]])
+            [spaces-search-api.system :refer [spaces-test-system]])
   (import [java.io ByteArrayOutputStream]))
 
 (deftest index-and-query-location-with-distance-filter

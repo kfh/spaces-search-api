@@ -1,4 +1,4 @@
-(ns spaces-search-api-server.web.routes
+(ns spaces-search-api.web.routes
   (:require [cheshire.core :as json] 
             [taoensso.timbre :as timbre]
             [cognitect.transit :as transit]
@@ -6,8 +6,8 @@
             [liberator.core :refer [defresource]]
             [io.clojure.liberator-transit :refer :all] 
             [com.stuartsierra.component :as component]
-            [spaces-search-api-server.domain.locations :as domain]   
-            [spaces-search-api-server.service.locations :as service]))     
+            [spaces-search-api.domain.locations :as domain]   
+            [spaces-search-api.service.locations :as service]))     
 
 (timbre/refer-timbre)
 

@@ -1,4 +1,4 @@
-(ns spaces-search-api-server.logger.loggers
+(ns spaces-search-api.logger.loggers
   (:require [taoensso.timbre :as timbre]
             [com.stuartsierra.component :as component]
             [taoensso.timbre.appenders.rolling :as rolling]))

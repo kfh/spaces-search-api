@@ -1,7 +1,7 @@
-(ns spaces-search-api-server.service.queue
+(ns spaces-search-api.service.queue
   (:require [taoensso.timbre :as timbre]
-            [com.stuartsierra.component :as component]  
             [clojure.core.async :refer [chan close!]]   
+            [com.stuartsierra.component :as component]  
             [com.keminglabs.zmq-async.core :refer [register-socket!]]))
 
 (timbre/refer-timbre)

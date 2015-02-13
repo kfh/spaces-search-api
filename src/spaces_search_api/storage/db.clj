@@ -1,4 +1,4 @@
-(ns spaces-search-api-server.storage.db
+(ns spaces-search-api.storage.db
   (:require [hara.common :refer [uuid]]
             [taoensso.timbre :as timbre]
             [clojurewerkz.elastisch.native :as es] 

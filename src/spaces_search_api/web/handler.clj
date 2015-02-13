@@ -1,4 +1,4 @@
-(ns spaces-search-api-server.web.handler
+(ns spaces-search-api.web.handler
   (:require [compojure.handler :as handler]
             [taoensso.timbre :as timbre]
             [com.stuartsierra.component :as component]  

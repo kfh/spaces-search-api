@@ -1,4 +1,4 @@
-(ns spaces-search-api-server.domain.locations
+(ns spaces-search-api.domain.locations
   (:require [schema.core :as s]
             [taoensso.timbre :as timbre]))
 
