@@ -1,4 +1,4 @@
-(defproject spaces-search-api-server "0.1.0-SNAPSHOT"
+(defproject spaces-search-api "0.1.0-SNAPSHOT"
   :description "FIXME: write description"
   :url "http://example.com/FIXME"
   :dependencies [[ring "1.3.2"]
