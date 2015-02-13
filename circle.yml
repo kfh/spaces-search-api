@@ -1,6 +1,0 @@
-test:  
-  override:
-    - lein test && lein install:
-        pwd: spaces-search-api-server
-    - lein test:
-        pwd: spaces-search-api-client
