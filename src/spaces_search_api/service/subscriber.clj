@@ -1,54 +1,38 @@
 (ns spaces-search-api.service.subscriber
   (:require [taoensso.timbre :as timbre]
-            [cognitect.transit :as transit]
             [com.stuartsierra.component :as component]
-            [clojure.core.async :refer [<! close! go-loop]]
-            [spaces-search-api.service.locations :as service])
-  (import [java.io ByteArrayInputStream]))
+            [clojure.core.async :refer [<!! close! thread]]
+            [spaces-search-api.service.locations :as service]))
 
 (timbre/refer-timbre)
 
-(defn- read-transit [geolocation]
-  (-> geolocation
-      (ByteArrayInputStream.)
-      (transit/reader :json)
-      (transit/read)))
-
-(defn- take-and-index-geolocations [es subscriber]
-  (let [{:keys [conn index m-type]} es] 
-    (go-loop []
-      (when-let [geolocations (<! subscriber)]
-        (->> geolocations
-             (read-transit) 
-             (spy :info "Preparing to index: ") 
-             (service/index-locations conn index m-type)
-             (spy :info "Index result: ")))
-      (recur))))
-
-(defrecord ZeroMQSubscriber [es queue]
+(defrecord GeolocationsSubscriber [es hornetq-geolocations]
   component/Lifecycle
 
   (start [this]
-    (info "Starting ZeroMQ subscriber")
+    (info "Starting geolocations subscriber")
     (if (:subscriber this)
       this
-      (->> queue 
-           :sub-channel
-           (take-and-index-geolocations es)
-           (assoc this :subscriber))))
+      (let [{:keys [conn index m-type]} es
+            sub-out (:sub-out hornetq-geolocations)] 
+        (thread
+          (while true
+            (when-let [geolocations (<!! sub-out)]
+              (->> geolocations
+                   (spy :info "Preparing to index: ") 
+                   (service/index-locations conn index m-type)
+                   (spy :info "Index result: ")))))
+        (assoc this :subscriber sub-out))))
 
   (stop [this]
-    (info "Stopping ZeroMQ subscriber")
+    (info "Stopping geolocations subscriber")
     (if-not (:subscriber this)
       this
       (do
         (close! (:subscriber this))
         (dissoc this :subscriber)))))
 
-(defn zeromq-subscriber []
+(defn geolocations-subscriber []
   (component/using
-    (map->ZeroMQSubscriber {})
-    [:es :queue]))
-
-
-
+    (map->GeolocationsSubscriber {})
+    [:es :hornetq-geolocations]))

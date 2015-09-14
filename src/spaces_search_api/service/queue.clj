@@ -1,42 +1,42 @@
 (ns spaces-search-api.service.queue
   (:require [taoensso.timbre :as timbre]
-            [clojure.core.async :refer [chan close!]]   
-            [com.stuartsierra.component :as component]  
-            [com.keminglabs.zmq-async.core :refer [register-socket!]]))
+            [cognitect.transit :as transit]
+            [com.stuartsierra.component :as component]
+            [clojure.core.async :refer [put! chan close!]]   
+            [immutant.messaging :refer [topic context stop subscribe]])
+  (import [java.io ByteArrayInputStream]))
 
 (timbre/refer-timbre)
 
-(def publisher "tcp://*:17778")
+(defn- read-transit [geolocation]
+  (-> geolocation
+      (ByteArrayInputStream.)
+      (transit/reader :json)
+      (transit/read)))
 
-(def sub-in (chan 1024))
-(def sub-out (chan 1024))
-
-(def sub {:in sub-in
-          :out sub-out
-          :socket-type :sub
-          :configurator (fn [socket]
-                          (do
-                            (.connect socket publisher)
-                            (.subscribe socket (byte-array 0))))})
-
-(defrecord ZeroMQ []
+(defrecord HornetQGeolocations []
   component/Lifecycle
-  
-  (start [this]
-    (info "Starting ZeroMQ")
-    (if (:sub-channel this)
-      this
-      (do
-        (register-socket! sub)
-        (assoc this :sub-channel sub-out))))
-  
-  (stop [this]
-    (info "Stopping ZeroMQ")
-    (if-not (:sub-channel this)
-      this
-      (do
-        (close! sub-in)
-        (dissoc this :sub-channel)))))
 
-(defn zeromq []
-  (map->ZeroMQ {}))
+  (start [this]
+    (info "Starting HornetQ(geolocations)")
+    (if (:sub-out this)
+      this
+      (let [sub-out (chan)
+            f #(put! sub-out (read-transit %))
+            ctx (context :host "localhost" :port 5445 :client-id "55f2c999")  
+            t (topic "geolocations" :context ctx)
+            listener (subscribe t "geolocations-listener" f)]
+        (assoc this :listener listener :ctx ctx :sub-out sub-out))))
+
+  (stop [this]
+    (info "Stopping HornetQ(geolocations)")
+    (if-not (:sub-out this)
+      this
+      (do
+        (stop (:listener this))
+        (stop (:ctx this))
+        (close! (:sub-out this))
+        (dissoc this :listener :ctx :sub-out)))))
+
+(defn hornetq-geolocations []
+  (map->HornetQGeolocations {}))

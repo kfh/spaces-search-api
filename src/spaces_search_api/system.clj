@@ -1,6 +1,7 @@
 (ns spaces-search-api.system
   (:gen-class)
-  (:require [taoensso.timbre :as timbre] 
+  (:require [clojure.edn :as edn]
+            [taoensso.timbre :as timbre] 
             [spaces-search-api.storage.db :as db]
             [spaces-search-api.web.routes :as routes]
             [spaces-search-api.env.variables :as env]
@@ -15,7 +16,7 @@
 
 (def config (-> "resources/spaces-search-api-conf.edn" 
                 (slurp)
-                (clojure.edn/read-string)))
+                (edn/read-string)))
 
 (defn spaces-test-db []
   (component/system-map
@@ -34,8 +35,8 @@
       :logger (logger/rolling-file-appender)
       :env (env/environment)
       :es (db/elasticsearch)
-      :queue (queue/zeromq)
-      :subscriber (subscriber/zeromq-subscriber)
+      :hornetq-geolocations (queue/hornetq-geolocations)
+      :geolocations-subscriber (subscriber/geolocations-subscriber)
       :api-routes (routes/api-routes)
       :ring-handler (handler/ring-handler)
       :web-server (server/web-server web-host web-port))))

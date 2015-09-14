@@ -12,7 +12,7 @@
     (info "Starting rolling file appender log")
     (if (:appender this)
       this  
-      (let [config {:path "log/spaces-search-api-server.log" :pattern :daily}
+      (let [config {:path "log/spaces-search-api.log" :pattern :daily}
             appender (rolling/make-rolling-appender)]
         (timbre/set-config! [:shared-appender-config :rolling] config)
         (timbre/set-config! [:appenders :rolling] appender)
