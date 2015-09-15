@@ -10,7 +10,8 @@
             [spaces-search-api.service.queue :as queue]
             [spaces-search-api.web.handler :as handler]
             [spaces-search-api.logger.loggers :as logger]
-            [spaces-search-api.service.subscriber :as subscriber]))
+            [spaces-search-api.service.subscriber :as subscriber]
+            [reloaded.repl :refer [system init start stop go reset]]))
 
 (timbre/refer-timbre)
 
@@ -41,8 +42,8 @@
       :ring-handler (handler/ring-handler)
       :web-server (server/web-server web-host web-port))))
 
-(defn -main [& args]
-  (component/start
-    (spaces-system config))
+(defn -main []
+  (reloaded.repl/set-init! #(spaces-system config))
+  (go)
   (info "Spaces search api up and running"))
 
