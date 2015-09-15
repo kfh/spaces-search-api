@@ -42,7 +42,7 @@
     (info "Starting Elasticsearch")
     (if (:es this) 
       this
-      (let [es (create {:disable-http? true})
+      (let [es (create {:disable-http? true :rubberlike/temp-data-dir? true})
             conn (client es) 
             index "spaces_test"
             m-type "location"
