@@ -32,4 +32,5 @@
                                   [org.clojure/java.classpath "0.2.2"]
                                   [ring-mock "0.1.5"]   
                                   [javax.servlet/servlet-api "2.5"]]}
-             :uberjar {:main spaces-search-api.system}})
+             :uberjar {:main spaces-search-api.system
+                       :aot [spaces-search-api.system]}})
