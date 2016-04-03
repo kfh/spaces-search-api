@@ -60,8 +60,8 @@
 (defn index-location [conn index m-type location]
   @(esd/async-put conn index m-type (:id location) location :refresh (:refresh location)))
 
-(defn update-location [conn index m-type location-id location]
-  @(esd/async-put conn index m-type location-id location))
+(defn update-location [conn index m-type location]
+  @(esd/async-put conn index m-type (:id location) location))
 
 (defn delete-location [conn index m-type location-id]
   (esd/delete conn index m-type location-id)) 

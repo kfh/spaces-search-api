@@ -1,69 +1,54 @@
 (ns spaces-search-api.domain.locations
-  (:require [schema.core :as s]
-            [taoensso.timbre :as timbre]))
+  (:require [schema.core :as s]))
 
 (def filters (s/enum :distance-filter :distance-range-filter :polygon-filter :bounding-box-filter))
 
-(def DistanceFilterQuery
-  {(s/required-key :distance) s/Str 
-   (s/required-key :lat) double 
-   (s/required-key :long) double
-   (s/required-key :filter) (s/eq :distance-filter)})
+(s/defschema DistanceFilterQuery
+  {:distance s/Str
+   :lat Double
+   :long Double
+   :filter (s/eq :distance-filter)})
 
-(def DistanceRangeFilterQuery
-  {(s/required-key :from-distance) s/Str 
-   (s/required-key :to-distance) s/Str 
-   (s/required-key :lat) double 
-   (s/required-key :long) double
-   (s/required-key :filter) (s/eq :distance-range-filter)}) 
+(s/defschema DistanceRangeFilterQuery
+  {:from-distance s/Str
+   :to-distance s/Str
+   :lat Double
+   :long Double
+   :filter (s/eq :distance-range-filter)})
 
-(def PolygonFilterQuery
-  {(s/required-key :lat-1) double 
-   (s/required-key :long-1) double 
-   (s/required-key :lat-2) double 
-   (s/required-key :long-2) double 
-   (s/required-key :lat-3) double 
-   (s/required-key :long-3) double
-   (s/required-key :filter) (s/eq :polygon-filter)})
+(s/defschema PolygonFilterQuery
+  {:lat-1 Double
+   :long-1 Double
+   :lat-2 Double
+   :long-2 Double
+   :lat-3 Double
+   :long-3 Double
+   :filter (s/eq :polygon-filter)})
 
-(def BoundingBoxFilterQuery
-  {(s/required-key :lat-top) double 
-   (s/required-key :long-top) double 
-   (s/required-key :lat-bottom) double 
-   (s/required-key :long-bottom) double
-   (s/required-key :filter) (s/eq :bounding-box-filter)})
+(s/defschema BoundingBoxFilterQuery
+  {:lat-top Double
+   :long-top Double
+   :lat-bottom Double
+   :long-bottom Double
+   :filter (s/eq :bounding-box-filter)})
 
-(def FilterQuery 
-  (s/either 
+(s/defschema FilterQuery
+  (s/either
     DistanceFilterQuery
     DistanceRangeFilterQuery
     PolygonFilterQuery
     BoundingBoxFilterQuery))
 
-(defn validate-location-query [query]
-  (try
-    [(s/validate FilterQuery query) nil]
-    (catch clojure.lang.ExceptionInfo e
-      [nil (ex-data e)])))
+(s/defschema Geocodes
+  {:lat Double
+   :lon Double})
 
-(def Geocodes 
-  {(s/required-key :lat) double
-   (s/required-key :lon) double})
+(s/defschema Location
+  {:id s/Str
+   :geocodes Geocodes
+   :timestamp s/Inst
+   (s/optional-key :refresh) s/Bool})
 
-(def Location
-  {(s/required-key :id) s/Str
-   (s/required-key :geocodes) Geocodes
-   (s/required-key :timestamp) s/Inst
-   (s/optional-key :refresh) boolean})
+(s/defschema NewLocation (dissoc Location :location/public-id))
 
-(defn validate-location [location]
-  (try 
-    [(s/validate Location location) nil]
-    (catch clojure.lang.ExceptionInfo e
-      [nil (ex-data e)])))
 
-(defn validate-location-id [location-id]
-  (try 
-    [(s/validate s/Str location-id) nil]
-    (catch clojure.lang.ExceptionInfo e
-      [nil (ex-data e)])))

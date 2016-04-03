@@ -3,7 +3,6 @@
   (:require [clojure.edn :as edn]
             [taoensso.timbre :as timbre] 
             [spaces-search-api.storage.db :as db]
-            [spaces-search-api.web.routes :as routes]
             [spaces-search-api.env.variables :as env]
             [spaces-search-api.web.server :as server]
             [com.stuartsierra.component :as component]   
@@ -26,7 +25,6 @@
 (defn spaces-test-system []
   (component/system-map
     :es (db/elasticsearch-test)
-    :api-routes (routes/api-routes)
     :ring-handler (handler/ring-handler)
     :web-server (server/web-server-test)))
 
@@ -38,7 +36,6 @@
       :es (db/elasticsearch)
       :hornetq-geolocations (queue/hornetq-geolocations)
       :geolocations-subscriber (subscriber/geolocations-subscriber)
-      :api-routes (routes/api-routes)
       :ring-handler (handler/ring-handler)
       :web-server (server/web-server web-host web-port))))
 
